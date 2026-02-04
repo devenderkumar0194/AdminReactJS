@@ -8,12 +8,29 @@ export default function UserList() {
   const [loading, setLoading] = useState(true)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState(null)
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     setLoading(true)
-    fetchUsers()
-      .then(setUsers)
-      .finally(() => setLoading(false))
+    setError(null)
+    try {
+      const response = await fetchUsers()
+      // Handle both paginated and direct user array responses
+      if (response && Array.isArray(response)) {
+        setUsers(response)
+      } else if (response && response.users) {
+        setUsers(response.users)
+      } else {
+        setUsers([])
+      }
+    } catch (err) {
+      console.error('Failed to fetch users:', err)
+      setError(err.message)
+      // Fallback to empty array if API fails
+      setUsers([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -28,7 +45,10 @@ export default function UserList() {
     try {
       await deleteUser(deleteTarget.id)
       setDeleteTarget(null)
-      loadUsers()
+      await loadUsers() // Reload users after successful deletion
+    } catch (err) {
+      console.error('Failed to delete user:', err)
+      alert(`Failed to delete user: ${err.message}`)
     } finally {
       setDeleting(false)
     }
@@ -49,8 +69,18 @@ export default function UserList() {
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-12 text-center text-slate-500">Loading users...</div>
+        ) : error ? (
+          <div className="p-12 text-center text-red-500">
+            Error loading users: {error}
+            <button 
+              onClick={loadUsers}
+              className="ml-4 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         ) : users.length === 0 ? (
-          <div className="p-12 text-center text-slate-500">No users yet. Create one to get started.</div>
+          <div className="p-12 text-center text-slate-500">No users found. Create one to get started.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -108,7 +138,7 @@ export default function UserList() {
       <ConfirmModal
         open={!!deleteTarget}
         title="Delete User"
-        message={deleteTarget ? `Are you sure you want to delete "${deleteTarget.name}"?` : ''}
+        message={deleteTarget ? `Are you sure you want to delete "${deleteTarget.name}"? This action cannot be undone.` : ''}
         confirmLabel="Delete"
         variant="danger"
         onConfirm={confirmDelete}
