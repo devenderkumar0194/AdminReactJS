@@ -7,6 +7,8 @@ import UserList from './pages/users/UserList'
 import UserCreate from './pages/users/UserCreate'
 import UserEdit from './pages/users/UserEdit'
 import { Profile } from './pages/Profile'
+import Home from './pages/Home'
+import Enterpreneur from './pages/Enterpreneur/Enterpreneur'
 
 // Placeholder components for settings pages
 function SettingsProfile() {
@@ -57,16 +59,22 @@ function SettingsPreferences() {
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      
+      <Route path="/" element={<Enterpreneur />} />
+      
+
+      {/* <Route path="/login" element={<Login />} />
+      <Route path="/home" element={<Home />} /> */}
+      
       <Route
-        path="/"
+        path="/admin"
         element={
           <ProtectedRoute>
             <DashboardLayout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/dashboard" replace />} />
+        {/* <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="profile" element={<Profile />} />
         <Route path="users" element={<UserList />} />
@@ -74,8 +82,11 @@ function App() {
         <Route path="users/:id/edit" element={<UserEdit />} />
         <Route path="settings/profile" element={<SettingsProfile />} />
         <Route path="settings/security" element={<SettingsSecurity />} />
-        <Route path="settings/preferences" element={<SettingsPreferences />} />
+        <Route path="settings/preferences" element={<SettingsPreferences />} /> */}
       </Route>
+
+
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
