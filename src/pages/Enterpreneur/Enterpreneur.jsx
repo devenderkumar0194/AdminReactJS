@@ -48,7 +48,7 @@ export default function Entrepreneur() {
   return (
     <div className="bg-[#0B0B0F] text-white font-sans overflow-hidden">
 
-        <Watermark/>
+        {/* <Watermark/> */}
 
       {/* HERO SECTION */}
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 relative">
