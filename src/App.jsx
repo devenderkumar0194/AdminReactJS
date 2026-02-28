@@ -9,6 +9,7 @@ import UserEdit from './pages/users/UserEdit'
 import { Profile } from './pages/Profile'
 import Home from './pages/Home'
 import Enterpreneur from './pages/Enterpreneur/Enterpreneur'
+import Devender from './pages/Devender/Devender'
 
 // Placeholder components for settings pages
 function SettingsProfile() {
@@ -60,7 +61,8 @@ function App() {
   return (
     <Routes>
       
-      <Route path="/" element={<Enterpreneur />} />
+      <Route path="/" element={<Devender />} />
+      {/* <Route path="/" element={<Enterpreneur />} /> */}
       
 
       {/* <Route path="/login" element={<Login />} />
